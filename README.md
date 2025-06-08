@@ -189,6 +189,23 @@ twstock.realtime.get(['2330', '2337', '2409'])  # 擷取當前三檔資訊
 ## 使用範例
 
 * [tw-stocker](https://github.com/mlouielu/stocker)
+* `examples/frontend` 以 Flask 與 Chart.js 實作的簡易前端，可依股票代碼查詢即時價格並呈現 K 線圖。
+
+## 部署到 Render
+
+若要將範例前後端部署到 [Render](https://render.com)，可依下列步驟進行：
+
+1. Fork 本專案並登入 Render，建立新的 **Web Service**。
+2. 連結您的倉庫，並設定 `Build Command` 為：
+   ```bash
+   pip install -r examples/frontend/requirements.txt
+   ```
+3. 將 `Start Command` 設定為：
+   ```bash
+   python examples/frontend/app.py
+   ```
+4. 完成部署後，即可透過 Render 提供的網址存取網頁。
+
 
 ## Contributing
 

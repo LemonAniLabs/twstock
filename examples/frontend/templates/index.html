@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>TW Stock Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+</head>
+<body>
+<h1>TW Stock Viewer</h1>
+<input id="symbol" placeholder="2330"/>
+<button onclick="loadData()">Load</button>
+<div>
+    Current price: <span id="price"></span>
+</div>
+<canvas id="chart" width="800" height="400"></canvas>
+<script>
+async function loadData() {
+    const code = document.getElementById('symbol').value;
+    const priceRes = await fetch('/api/price/' + code);
+    const priceData = await priceRes.json();
+    document.getElementById('price').innerText = priceData.price || priceData.error;
+
+    const candleRes = await fetch('/api/candlestick/' + code);
+    const candlestick = await candleRes.json();
+    const ctx = document.getElementById('chart').getContext('2d');
+    if (window.candleChart) {
+        window.candleChart.destroy();
+    }
+    window.candleChart = new Chart(ctx, {
+        type: 'candlestick',
+        data: {datasets: [{label: code, data: candlestick}]},
+        options: {
+            parsing: {xAxisKey: 't', openKey: 'o', highKey: 'h', lowKey: 'l', closeKey: 'c'},
+            scales: {x: {type: 'time', time: {unit: 'day'}}}
+        }
+    });
+}
+</script>
+</body>
+</html>
